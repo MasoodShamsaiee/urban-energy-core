@@ -6,8 +6,9 @@ def test_project_root_notebooks_parent():
 
     from urban_energy_core.pipelines.core_workflows import project_root
 
-    got = project_root(Path(r"C:\tmp\demo\notebooks"))
-    assert got == Path(r"C:\tmp\demo")
+    got = project_root(Path("tmp") / "demo" / "notebooks")
+    assert got.name == "demo"
+    assert got.parent.name == "tmp"
 
 
 def test_clean_weather_tables_coerces_types_and_sorts():
