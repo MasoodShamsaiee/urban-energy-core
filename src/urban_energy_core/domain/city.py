@@ -6,10 +6,10 @@ from typing import Any
 import pandas as pd
 from tqdm.auto import tqdm
 
-from src.urban_energy_core.domain.fsa import FSA
-from src.urban_energy_core.services.prism import city_prism_table
-from src.urban_energy_core.services.short_term import city_short_term_table
-from src.urban_energy_core.plotting.city import plot_city_fsa_map
+from urban_energy_core.domain.fsa import FSA
+from urban_energy_core.services.prism import city_prism_table
+from urban_energy_core.services.short_term import city_short_term_table
+from urban_energy_core.plotting.city import plot_city_fsa_map
 
 
 @dataclass

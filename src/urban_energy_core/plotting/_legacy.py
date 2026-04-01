@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import json
 
-from src.urban_energy_core.services.prism import fit_prism_segmented, predict_prism_segmented
+from urban_energy_core.services.prism import fit_prism_segmented, predict_prism_segmented
 
 
 def _normalize_city_fsa_selection(city, fsas=None) -> list[str]:

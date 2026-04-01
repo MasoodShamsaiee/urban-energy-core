@@ -1,4 +1,4 @@
-from src.urban_energy_core.plotting._legacy import (
+from urban_energy_core.plotting._legacy import (
     animate_city_consumption_map,
     plot_fsa_prism_fit,
     plot_fsa_timeseries,

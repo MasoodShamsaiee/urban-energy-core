@@ -5,19 +5,19 @@ from typing import Any
 
 import pandas as pd
 
-from src.urban_energy_core.services.normalization import (
+from urban_energy_core.services.normalization import (
     compute_per_capita_series,
     normalize_fsa_weather_linear,
 )
-from src.urban_energy_core.services.prism import (
+from urban_energy_core.services.prism import (
     fit_prism_segmented,
     prism_heating_change_point_summary,
 )
-from src.urban_energy_core.services.short_term import (
+from urban_energy_core.services.short_term import (
     cluster_daily_profiles_dtw,
     compute_daily_short_term_metrics,
 )
-from src.urban_energy_core.plotting.diagnostics import plot_fsa_prism_fit
+from urban_energy_core.plotting.diagnostics import plot_fsa_prism_fit
 
 
 @dataclass

@@ -3,7 +3,7 @@ from pathlib import Path
 import re
 from tqdm.auto import tqdm
 
-from src.urban_energy_core.config import (
+from urban_energy_core.config import (
     CENSUS_FSA_SUBDIR,
     ELEC_4CITIES_FILE,
     ELEC_RAW_SUBDIR,

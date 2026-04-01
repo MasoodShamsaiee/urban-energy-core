@@ -5,8 +5,8 @@ from typing import Any
 import pandas as pd
 from tqdm.auto import tqdm
 
-from src.urban_energy_core.domain.city import City
-from src.urban_energy_core.domain.fsa import FSA
+from urban_energy_core.domain.city import City
+from urban_energy_core.domain.fsa import FSA
 
 
 def _pick_fsa_column(gdf, candidates: list[str] | None = None) -> str:

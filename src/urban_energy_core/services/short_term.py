@@ -9,7 +9,7 @@ import pandas as pd
 from tqdm.auto import tqdm
 
 if TYPE_CHECKING:
-    from src.urban_energy_core.domain.city import City
+    from urban_energy_core.domain.city import City
 
 
 def _empty_cluster_hourly_stats() -> pd.DataFrame:

@@ -1,5 +1,5 @@
-from src.urban_energy_core.plotting.city import plot_city_fsa_map
-from src.urban_energy_core.plotting.diagnostics import (
+from urban_energy_core.plotting.city import plot_city_fsa_map
+from urban_energy_core.plotting.diagnostics import (
     animate_city_consumption_map,
     plot_fsa_prism_fit,
     plot_fsa_timeseries,

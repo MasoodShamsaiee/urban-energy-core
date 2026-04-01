@@ -1,5 +1,5 @@
-from src.urban_energy_core.pipelines.build_city import build_cities_from_data
-from src.urban_energy_core.pipelines.core_workflows import (
+from urban_energy_core.pipelines.build_city import build_cities_from_data
+from urban_energy_core.pipelines.core_workflows import (
     CityBuildResult,
     CoreProjectData,
     ElectricityRebuildResult,

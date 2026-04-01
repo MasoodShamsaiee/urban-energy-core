@@ -1,4 +1,4 @@
-from src.urban_energy_core.io.load_data import (
+from urban_energy_core.io.load_data import (
     load_all_fsa_census,
     load_and_prepare_electricity_4cities,
     load_city_fsa_geojsons,

@@ -10,10 +10,10 @@ from tqdm.auto import tqdm
 
 from typing import TYPE_CHECKING
 
-from src.urban_energy_core.services.normalization import align_weather_to_load
+from urban_energy_core.services.normalization import align_weather_to_load
 
 if TYPE_CHECKING:
-    from src.urban_energy_core.domain.city import City
+    from urban_energy_core.domain.city import City
 
 
 class LegacyPrismFitter:

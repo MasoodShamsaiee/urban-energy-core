@@ -7,7 +7,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from src.urban_energy_core.io.load_data import (
+from urban_energy_core.io.load_data import (
     load_all_fsa_census,
     load_and_prepare_electricity_4cities,
     load_city_fsa_geojsons,
@@ -15,10 +15,10 @@ from src.urban_energy_core.io.load_data import (
     load_processed_electricity_wide,
     save_processed_electricity_wide,
 )
-from src.urban_energy_core.pipelines.build_city import build_cities_from_data
-from src.urban_energy_core.services.anomalies import treat_anomalies_until_target_rate
-from src.urban_energy_core.services.imputation import impute_missing_fsa_energy_by_census_proximity
-from src.urban_energy_core.services.preprocess import preprocess_wide_fsa_timeseries
+from urban_energy_core.pipelines.build_city import build_cities_from_data
+from urban_energy_core.services.anomalies import treat_anomalies_until_target_rate
+from urban_energy_core.services.imputation import impute_missing_fsa_energy_by_census_proximity
+from urban_energy_core.services.preprocess import preprocess_wide_fsa_timeseries
 
 
 @dataclass(frozen=True)

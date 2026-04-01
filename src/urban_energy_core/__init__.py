@@ -1,6 +1,6 @@
-from src.urban_energy_core.config import *
-from src.urban_energy_core.domain import City, FSA
-from src.urban_energy_core.io import (
+from urban_energy_core.config import *
+from urban_energy_core.domain import City, FSA
+from urban_energy_core.io import (
     load_all_fsa_census,
     load_and_prepare_electricity_4cities,
     load_city_fsa_geojsons,
@@ -9,7 +9,7 @@ from src.urban_energy_core.io import (
     load_weather_csv,
     save_processed_electricity_wide,
 )
-from src.urban_energy_core.pipelines import (
+from urban_energy_core.pipelines import (
     CityBuildResult,
     CoreProjectData,
     ElectricityRebuildResult,
