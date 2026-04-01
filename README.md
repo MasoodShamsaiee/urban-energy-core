@@ -35,8 +35,14 @@ conda run -n dsm_qc python -c "import sys; sys.path.insert(0, 'src'); import urb
 
 This repo was prepared from a larger local research project by moving the reusable energy-core logic into the `urban_energy_core` namespace and preserving backward compatibility in the source project before extraction.
 
+## Path config
+
+- workflow helpers still assume the original research layout by default when they compute the project root
+- prefer passing explicit file paths into loaders and pipeline entry points instead of relying on implicit local directories
+- see [docs/data_contracts.md](docs/data_contracts.md) for the expected table shapes that those paths should resolve to
+
 ## Next cleanup items
 
 - add focused unit tests for loaders, city building, PRISM, and normalization
 - trim any remaining research-specific assumptions in config and path handling
-- expand the README with data contracts and example notebook/script usage
+- add example notebook/script usage
