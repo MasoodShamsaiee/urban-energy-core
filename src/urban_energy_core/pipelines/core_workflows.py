@@ -8,10 +8,13 @@ import numpy as np
 import pandas as pd
 
 from urban_energy_core.io.load_data import (
+    load_all_da_census,
     load_all_fsa_census,
     load_and_prepare_electricity_4cities,
+    load_city_da_geojsons,
     load_city_fsa_geojsons,
     load_city_weather_csvs,
+    load_processed_da_electricity_wide,
     load_processed_electricity_wide,
     save_processed_electricity_wide,
 )
@@ -26,6 +29,8 @@ class CoreProjectData:
     census_df: pd.DataFrame
     geo: dict[str, Any]
     weather: dict[str, pd.DataFrame]
+    da_census_df: pd.DataFrame | None = None
+    da_geo: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -35,6 +40,9 @@ class CityBuildResult:
     geo: dict[str, Any]
     weather: dict[str, pd.DataFrame]
     cities: dict[str, Any]
+    da_elec_df: pd.DataFrame | None = None
+    da_census_df: pd.DataFrame | None = None
+    da_geo: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -74,6 +82,9 @@ def load_core_project_data(
     *,
     census_drop_key_col: bool = False,
     census_index_col: str = "GEO UID",
+    load_da: bool = False,
+    da_census_drop_key_col: bool = False,
+    da_census_index_col: str = "DAUID",
     show_progress: bool = True,
 ) -> CoreProjectData:
     census_df = load_all_fsa_census(drop_key_col=census_drop_key_col, show_progress=show_progress)
@@ -83,21 +94,50 @@ def load_core_project_data(
 
     geo = load_city_fsa_geojsons(show_progress=show_progress)
     weather = clean_weather_tables(load_city_weather_csvs(show_progress=show_progress))
-    return CoreProjectData(census_df=census_df, geo=geo, weather=weather)
+    da_census_df = None
+    da_geo = None
+    if load_da:
+        da_census_df = load_all_da_census(
+            drop_key_col=da_census_drop_key_col,
+            show_progress=show_progress,
+        )
+        if da_census_index_col in da_census_df.columns:
+            da_census_df = da_census_df.set_index(da_census_index_col)
+        da_census_df.index = da_census_df.index.astype(str)
+        da_geo = load_city_da_geojsons(show_progress=show_progress)
+
+    return CoreProjectData(
+        census_df=census_df,
+        geo=geo,
+        weather=weather,
+        da_census_df=da_census_df,
+        da_geo=da_geo,
+    )
 
 
 def build_city_bundle_from_processed_electricity(
     elec_path: str | Path,
     *,
+    da_elec_path: str | Path | None = None,
+    load_da: bool = False,
     show_progress: bool = True,
 ) -> CityBuildResult:
-    core = load_core_project_data(show_progress=show_progress)
+    core = load_core_project_data(load_da=load_da, show_progress=show_progress)
     elec_df = load_processed_electricity_wide(elec_path).sort_index()
+    da_elec_df = None
+    if load_da or da_elec_path is not None:
+        try:
+            da_elec_df = load_processed_da_electricity_wide(da_elec_path).sort_index()
+        except FileNotFoundError:
+            da_elec_df = None
     cities = build_cities_from_data(
         elec_df=elec_df,
         city_geojsons=core.geo,
         city_weather=core.weather,
         census_df=core.census_df,
+        da_elec_df=da_elec_df,
+        city_da_geojsons=core.da_geo,
+        da_census_df=core.da_census_df,
         show_progress=show_progress,
     )
     return CityBuildResult(
@@ -106,6 +146,9 @@ def build_city_bundle_from_processed_electricity(
         geo=core.geo,
         weather=core.weather,
         cities=cities,
+        da_elec_df=da_elec_df,
+        da_census_df=core.da_census_df,
+        da_geo=core.da_geo,
     )
 
 
@@ -221,10 +264,12 @@ def rebuild_electricity_with_weather_and_imputation(
 def compute_and_attach_city_tables(
     city,
     *,
+    unit: str = "fsa",
     prism_kwargs: dict[str, Any] | None = None,
     short_term_kwargs: dict[str, Any] | None = None,
 ) -> dict[str, pd.DataFrame]:
     prism_kwargs = {
+        "unit": unit,
         "per_capita": True,
         "weather_normalized": False,
         "mode": "segmented",
@@ -232,6 +277,7 @@ def compute_and_attach_city_tables(
         **(prism_kwargs or {}),
     }
     short_term_kwargs = {
+        "unit": unit,
         "per_capita": True,
         "weather_normalized": False,
         "winter_only": True,
@@ -243,11 +289,17 @@ def compute_and_attach_city_tables(
     prism_df = city.compute_prism_table(**prism_kwargs)
     short_term_df = city.compute_short_term_table(**short_term_kwargs)
 
-    city.prism_table = prism_df.copy()
-    city.short_term_table = short_term_df.copy()
+    table_prefix = "da" if unit == "da" else "fsa"
+    setattr(city, f"{table_prefix}_prism_table", prism_df.copy())
+    setattr(city, f"{table_prefix}_short_term_table", short_term_df.copy())
+    if unit == "fsa":
+        city.prism_table = prism_df.copy()
+        city.short_term_table = short_term_df.copy()
+
+    getter = city.get_da if unit == "da" else city.get_fsa
     for fsa_code, row in prism_df.iterrows():
-        city.get_fsa(fsa_code).prism_summary = row.to_dict()
+        getter(fsa_code).prism_summary = row.to_dict()
     for fsa_code, row in short_term_df.iterrows():
-        city.get_fsa(fsa_code).short_term_summary = row.to_dict()
+        getter(fsa_code).short_term_summary = row.to_dict()
 
     return {"prism_table": prism_df, "short_term_table": short_term_df}

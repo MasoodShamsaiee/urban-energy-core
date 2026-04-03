@@ -8,6 +8,8 @@ import numpy as np
 import pandas as pd
 from tqdm.auto import tqdm
 
+from urban_energy_core.services.normalization import apply_per_capita_to_series
+
 if TYPE_CHECKING:
     from urban_energy_core.domain.city import City
 
@@ -334,6 +336,7 @@ def compute_daily_short_term_metrics(
 
 def city_short_term_table(
     city: "City",
+    unit: str = "fsa",
     per_capita: bool = True,
     weather_normalized: bool = False,
     population_col: str = "Population and dwelling counts / Population, 2021",
@@ -379,17 +382,22 @@ def city_short_term_table(
     if invalid_months:
         raise ValueError(f"winter_months must be month numbers in 1..12; got invalid: {sorted(invalid_months)}")
 
-    codes = city.list_fsa_codes()
-    iter_codes = tqdm(codes, desc=f"Short-term metrics {city.name}") if show_progress else codes
+    units = city._units_for(unit)
+    codes = city._list_codes_for(unit)
+    iter_codes = tqdm(codes, desc=f"Short-term metrics {unit.upper()}s in {city.name}") if show_progress else codes
     for code in iter_codes:
-        fsa = city.get_fsa(code)
-        if fsa.electricity is None:
+        area = units[code]
+        if area.electricity is None:
             continue
-        s = fsa.electricity
+        s = area.electricity
         if weather_normalized:
-            s = fsa.normalize_for_weather(city.weather, dt_col=dt_col, temp_col=temp_col, copy=True)
+            s = area.normalize_for_weather(city.weather, dt_col=dt_col, temp_col=temp_col, copy=True)
         if per_capita:
-            s = fsa.per_capita_consumption(population_col=population_col)
+            s = apply_per_capita_to_series(
+                load_series=s,
+                census_row=area.census,
+                population_col=population_col,
+            )
         if winter_only:
             s = s[s.index.month.isin(winter_set)]
             if s.empty:

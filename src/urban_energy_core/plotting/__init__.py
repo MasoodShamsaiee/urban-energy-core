@@ -1,4 +1,4 @@
-from urban_energy_core.plotting.city import plot_city_fsa_map
+from urban_energy_core.plotting.city import plot_city_fsa_map, plot_spatial_samples_with_basemap
 from urban_energy_core.plotting.diagnostics import (
     animate_city_consumption_map,
     plot_fsa_prism_fit,
@@ -9,6 +9,7 @@ from urban_energy_core.plotting.diagnostics import (
 
 __all__ = [
     "plot_city_fsa_map",
+    "plot_spatial_samples_with_basemap",
     "plot_fsa_prism_fit",
     "plot_fsa_timeseries",
     "plot_stl_anomalies",

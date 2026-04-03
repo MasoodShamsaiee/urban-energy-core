@@ -10,7 +10,10 @@ from tqdm.auto import tqdm
 
 from typing import TYPE_CHECKING
 
-from urban_energy_core.services.normalization import align_weather_to_load
+from urban_energy_core.services.normalization import (
+    align_weather_to_load,
+    apply_per_capita_to_series,
+)
 
 if TYPE_CHECKING:
     from urban_energy_core.domain.city import City
@@ -629,6 +632,7 @@ def prism_heating_change_point_summary(
 
 def city_prism_table(
     city: "City",
+    unit: str = "fsa",
     per_capita: bool = True,
     weather_normalized: bool = False,
     population_col: str = "Population and dwelling counts / Population, 2021",
@@ -645,18 +649,23 @@ def city_prism_table(
         raise ValueError(f"City '{city.name}' has no weather dataframe.")
 
     records = []
-    codes = city.list_fsa_codes()
-    iter_codes = tqdm(codes, desc=f"PRISM for {city.name}") if show_progress else codes
+    units = city._units_for(unit)
+    codes = city._list_codes_for(unit)
+    iter_codes = tqdm(codes, desc=f"PRISM for {unit.upper()}s in {city.name}") if show_progress else codes
     for code in iter_codes:
-        fsa = city.get_fsa(code)
-        if fsa.electricity is None:
+        area = units[code]
+        if area.electricity is None:
             continue
 
-        s = fsa.electricity
+        s = area.electricity
         if weather_normalized:
-            s = fsa.normalize_for_weather(city.weather, dt_col=dt_col, temp_col=temp_col, copy=True)
+            s = area.normalize_for_weather(city.weather, dt_col=dt_col, temp_col=temp_col, copy=True)
         if per_capita:
-            s = fsa.per_capita_consumption(population_col=population_col)
+            s = apply_per_capita_to_series(
+                load_series=s,
+                census_row=area.census,
+                population_col=population_col,
+            )
 
         if mode == "segmented":
             summary = fit_prism_segmented(

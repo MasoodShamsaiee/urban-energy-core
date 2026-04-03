@@ -33,6 +33,7 @@ dev = [
 notebooks = [
   "jupyterlab",
   "ipykernel",
+  "contextily",
 ]
 
 [tool.setuptools]

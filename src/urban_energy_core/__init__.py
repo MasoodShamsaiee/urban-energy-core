@@ -1,14 +1,27 @@
 from urban_energy_core.config import *
-from urban_energy_core.domain import City, FSA
+from urban_energy_core.domain import Building, City, DA, EnergyEntity, FSA, SpatialUnit
+from urban_energy_core.integrations import (
+    build_hub_ready_building_table,
+    default_hub_repo_root,
+    export_hub_building_geojson,
+    to_hub_city,
+)
 from urban_energy_core.io import (
+    combine_montreal_building_sources,
+    load_all_da_census,
     load_all_fsa_census,
     load_and_prepare_electricity_4cities,
+    load_city_da_geojsons,
     load_city_fsa_geojsons,
     load_city_weather_csvs,
+    load_montreal_building_geometry,
+    load_montreal_building_inventory,
+    load_processed_da_electricity_wide,
     load_processed_electricity_wide,
     load_weather_csv,
     save_processed_electricity_wide,
 )
+from urban_energy_core.plotting import plot_spatial_samples_with_basemap
 from urban_energy_core.pipelines import (
     CityBuildResult,
     CoreProjectData,
@@ -23,8 +36,16 @@ from urban_energy_core.pipelines import (
 )
 
 __all__ = [
+    "Building",
     "City",
+    "DA",
+    "EnergyEntity",
     "FSA",
+    "SpatialUnit",
+    "build_hub_ready_building_table",
+    "default_hub_repo_root",
+    "export_hub_building_geojson",
+    "to_hub_city",
     "CoreProjectData",
     "CityBuildResult",
     "ElectricityRebuildResult",
@@ -35,11 +56,18 @@ __all__ = [
     "load_core_project_data",
     "project_root",
     "rebuild_electricity_with_weather_and_imputation",
+    "combine_montreal_building_sources",
+    "load_all_da_census",
     "load_all_fsa_census",
     "load_and_prepare_electricity_4cities",
+    "load_city_da_geojsons",
     "load_city_fsa_geojsons",
     "load_city_weather_csvs",
+    "load_montreal_building_geometry",
+    "load_montreal_building_inventory",
+    "load_processed_da_electricity_wide",
     "load_processed_electricity_wide",
     "load_weather_csv",
     "save_processed_electricity_wide",
+    "plot_spatial_samples_with_basemap",
 ]

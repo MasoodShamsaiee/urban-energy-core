@@ -98,3 +98,15 @@ def compute_per_capita_series(
     out = load_series.astype(float) / pop
     out.name = f"{load_series.name}_per_capita" if load_series.name else "per_capita"
     return out
+
+
+def apply_per_capita_to_series(
+    load_series: pd.Series,
+    census_row: pd.Series | dict | None,
+    population_col: str = "Population and dwelling counts / Population, 2021",
+) -> pd.Series:
+    return compute_per_capita_series(
+        load_series=load_series,
+        census_row=census_row,
+        population_col=population_col,
+    )
