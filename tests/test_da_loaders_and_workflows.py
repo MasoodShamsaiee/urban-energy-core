@@ -68,7 +68,7 @@ def test_build_city_bundle_from_processed_electricity_can_include_da(monkeypatch
         show_progress=False,
     )
 
-    assert result.da_elec_df is da_elec
+    pd.testing.assert_frame_equal(result.da_elec_df, da_elec)
     assert result.da_census_df is core.da_census_df
     assert result.da_geo is core.da_geo
     assert result.cities["montreal"].list_da_codes() == ["DA001"]

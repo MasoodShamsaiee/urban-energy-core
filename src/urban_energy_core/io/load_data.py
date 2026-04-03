@@ -292,6 +292,9 @@ def load_all_fsa_census(
         if dup_cols:
             merged = merged.drop(columns=dup_cols)
 
+    if key_col in merged.columns:
+        merged[key_col] = merged[key_col].astype(str).str.strip()
+
     if drop_key_col and key_col in merged.columns:
         merged = merged.drop(columns=key_col)
 

@@ -34,6 +34,7 @@ notebooks = [
   "jupyterlab",
   "ipykernel",
   "contextily",
+  "nbconvert",
 ]
 
 [tool.setuptools]

@@ -62,6 +62,14 @@ This repo was prepared from a larger local research project by moving the reusab
 - use `to_hub_city(...)` if the local `HUB` repo is available and you want a direct adapter path
 - see [docs/hub_integration.md](docs/hub_integration.md) for the intended architecture and current limitations
 
+## Synthetic Population Integration
+
+- `urban-energy-core` now also defines a DA-level contract for working with the sibling `synthetic-population-qc` package
+- use `build_synpop_da_input_table(...)` to export the DA scope and fallback context for a city
+- use `build_synpop_city_manifest(...)` for a lightweight DA manifest
+- use `summarize_synpop_outputs_by_da(...)` and `merge_synpop_summary_to_da_input(...)` to bring synthetic population outputs back into DA-level core tables
+- see [docs/synpop_integration.md](docs/synpop_integration.md) for the intended handoff
+
 ## Example assets
 
 - [example_capabilities.py](C:/Users/m_hamsai/OneDrive%20-%20Concordia%20University%20-%20Canada/PhD%20Research%20/Codes%20and%20Projects/urban-energy-core/scripts/example_capabilities.py)

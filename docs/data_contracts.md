@@ -110,6 +110,30 @@ Operational expectations:
 - those assignments may come from external data or city-level geometric linking
 - containment is preferred before centroid-distance fallback when city geometry is available
 
+## Synthetic population handoff contract
+
+When `urban-energy-core` hands off a city scope to `synthetic-population-qc`, the preferred interface is DA-level.
+
+Expected DA input fields:
+
+- `da_code`
+- optional `population_2021`
+- optional `nearest_fsa_1`, `nearest_fsa_2`, `nearest_fsa_3`
+- `has_census`
+- `has_geometry`
+
+Expected synthetic population output fields:
+
+- one row per synthetic individual
+- a DA identifier column, typically `area`
+- optional household identifier column, typically `HID`
+
+Operational expectations:
+
+- `da_code` values should be string-compatible and stable across repos
+- synthetic population outputs should be summarized back to DA-level counts before joining into core DA tables
+- synthetic population outputs are socio-demographic enrichment, not energy measurements
+
 ## Montreal building-source contract
 
 Current Montreal building workflows assume:

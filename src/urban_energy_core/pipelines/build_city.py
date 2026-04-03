@@ -52,6 +52,18 @@ def _geometry_union(g_part):
             return g_part.unary_union
         except Exception:
             return None
+    if hasattr(g_part, "columns") and "geometry" in g_part.columns:
+        geometries = [geom for geom in g_part["geometry"].tolist() if geom is not None]
+        if not geometries:
+            return None
+        if len(geometries) == 1:
+            return geometries[0]
+        try:
+            from shapely.ops import unary_union
+
+            return unary_union(geometries)
+        except Exception:
+            return geometries[0]
     return None
 
 
